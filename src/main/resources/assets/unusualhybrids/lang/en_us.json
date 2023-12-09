@@ -1,0 +1,18 @@
+{
+  "entity.unusualhybrids.indominus_rex" : "Indominus Rex",
+
+  "item.unusualhybrids.carbon_sludge" : "Carbon Sludge",
+  "item.unusualhybrids.indominus_scales" : "Indominus Rex Scales",
+  "item.unusualhybrids.indominus_rex_dna_flask" : "Indominus Rex DNA Flask",
+  "item.unusualhybrids.indominus_rex_spawn_egg" : "Indominus Rex Spawn Egg",
+
+  "block.unusualhybrids.hybridizer" : "Hybridizer",
+
+  "creativetab.hybrid_tab" : "Unusual Hybrids",
+
+  "unusualhybrids.advancement.interact_indom" : "Bigger. Louder. More Teeth.",
+  "unusualhybrids.advancement.interact_indom.desc" : "Revive the Mighty Indominus Rex",
+
+  "unusualhybrids.advancement.obtain_carbon_sludge" : "Diamond in the Ooze",
+  "unusualhybrids.advancement.obtain_carbon_sludge.desc" : "Acquire Carbon Sludge"
+}

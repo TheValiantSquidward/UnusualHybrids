@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:main/fossil",
+  "criteria": {
+    "carbon_sludge": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "unusualhybrids:carbon_sludge"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "unusualhybrids.advancement.obtain_carbon_sludge.desc"
+    },
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "item": "unusualhybrids:carbon_sludge"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "unusualhybrids.advancement.obtain_carbon_sludge"
+    }
+  },
+  "requirements": [
+    [
+      "carbon_sludge"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
