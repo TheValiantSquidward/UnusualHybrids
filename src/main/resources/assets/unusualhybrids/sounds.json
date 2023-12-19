@@ -1,0 +1,59 @@
+{
+  "indom_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "unusualhybrids:indobreath9"
+      },
+      {
+        "name": "unusualhybrids:indobreath10"
+      },
+      {
+        "name": "unusualhybrids:indobreath8"
+      },
+      {
+        "name": "unusualhybrids:indobreath7"
+      },
+      {
+        "name": "unusualhybrids:indobreath6"
+      }
+    ],
+    "subtitle": "unusualhybrids.sound.subtitle.indom_idle"
+  },
+  "indom_hurt": {
+  "category": "neutral",
+  "sounds": [
+    {
+      "name": "unusualhybrids:indopain1"
+    },
+    {
+      "name": "unusualhybrids:indopain2"
+    }
+  ],
+  "subtitle": "unusualhybrids.sound.subtitle.indom_hurt"
+},
+  "indom_bite": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "unusualhybrids:indobite1"
+      },
+      {
+        "name": "unusualhybrids:indobite2"
+      },
+      {
+        "name": "unusualhybrids:indobite3"
+      },
+      {
+        "name": "unusualhybrids:indobite4"
+      },
+      {
+        "name": "unusualhybrids:indobite5"
+      },
+      {
+        "name": "unusualhybrids:indobite6"
+      }
+    ],
+    "subtitle": "unusualhybrids.sound.subtitle.indom_bite"
+  }
+}

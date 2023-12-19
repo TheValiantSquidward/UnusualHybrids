@@ -1,10 +1,12 @@
 {
   "entity.unusualhybrids.indominus_rex" : "Indominus Rex",
+  "entity.unusualhybrids.majungaraptor" : "Majungaraptor",
 
   "item.unusualhybrids.carbon_sludge" : "Carbon Sludge",
   "item.unusualhybrids.indominus_scales" : "Indominus Rex Scales",
   "item.unusualhybrids.indominus_rex_dna_flask" : "Indominus Rex DNA Flask",
   "item.unusualhybrids.indominus_rex_spawn_egg" : "Indominus Rex Spawn Egg",
+  "item.unusualhybrids.majungaraptor_spawn_egg" : "Majungaraptor Spawn Egg",
 
   "block.unusualhybrids.hybridizer" : "Hybridizer",
 

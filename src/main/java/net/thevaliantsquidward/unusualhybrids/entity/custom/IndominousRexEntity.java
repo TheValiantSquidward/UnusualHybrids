@@ -49,6 +49,7 @@ import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.thevaliantsquidward.unusualhybrids.ModTags;
+import net.thevaliantsquidward.unusualhybrids.sound.ModSounds;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
@@ -126,7 +127,7 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
         }));
 
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, false, false, entity -> {
-            return entity.getBoundingBox().getSize() >= 0.8 && !(entity instanceof EntityVelociraptor); // Adjust the size threshold as needed
+            return entity.getBoundingBox().getSize() >= 0.8 && !(entity instanceof EntityVelociraptor) && !(entity instanceof MajungaraptorEntity); // Adjust the size threshold as needed
         }) {
             public boolean canUse() {
                 return !hasEepy() && passiveFor == 0 && super.canUse();
@@ -662,7 +663,7 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
 
         protected void preformBiteAttack () {
             Vec3 pos = mob.position();
-            this.mob.playSound(UPSounds.REX_BITE.get(), 1.0F, 1.0F);
+            this.mob.playSound(ModSounds.INDOM_BITE.get(), 1.0F, 1.0F);
             HitboxHelper.LargeAttack(this.mob.damageSources().mobAttack(mob),10.0f, 0.1f, mob, pos,  5.0F, -Math.PI/2, Math.PI/2, -1.0f, 3.0f);
 
         }
@@ -690,7 +691,7 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
 
             if (targetEntity != null) {
 
-                double knockback = 1.0F;
+                double knockback = 0.7F;
 
                 double knockbackResistance = 0.0D;
                 if (targetEntity instanceof LivingEntity) {
@@ -778,11 +779,11 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
 
 
     protected SoundEvent getAmbientSound() {
-        return UPSounds.REX_IDLE.get();
+        return ModSounds.INDOM_IDLE.get();
     }
 
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return UPSounds.REX_HURT.get();
+        return ModSounds.INDOM_HURT.get();
     }
 
     protected SoundEvent getDeathSound() {

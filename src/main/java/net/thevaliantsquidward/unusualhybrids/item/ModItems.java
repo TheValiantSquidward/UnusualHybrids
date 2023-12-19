@@ -23,6 +23,9 @@ public class ModItems {
 
     public static final RegistryObject<Item> INDOM_SPAWN_EGG = ITEMS.register("indominus_rex_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.INDOM, 0xFCFBFB, 0xDDDBDB, new Item.Properties()));
+    public static final RegistryObject<Item> MAJUNGAR_SPAWN_EGG = ITEMS.register("majungaraptor_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.MAJUNGARAPTOR, 0x635d48, 0x7c7f16, new Item.Properties()));
+
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

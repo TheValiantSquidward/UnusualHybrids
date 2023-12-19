@@ -15,6 +15,7 @@ import net.thevaliantsquidward.unusualhybrids.UnusualHybrids;
 public class ModTags {
 
     public static final TagKey<Block> INDOM_BREAKABLES = registerBlockTag("indom_breakables");
+    public static final TagKey<Block> MAJUNGAR_BREAKABLES = registerBlockTag("majungar_breakables");
 
     private static TagKey<Block> registerBlockTag(String name) {
         return TagKey.create(Registries.BLOCK, new ResourceLocation(UnusualHybrids.MOD_ID, name));
