@@ -7,6 +7,7 @@ import net.thevaliantsquidward.unusualhybrids.UnusualHybrids;
 import net.thevaliantsquidward.unusualhybrids.entity.ModEntities;
 import net.thevaliantsquidward.unusualhybrids.entity.custom.IndominousRexEntity;
 import net.thevaliantsquidward.unusualhybrids.entity.custom.MajungaraptorEntity;
+import net.thevaliantsquidward.unusualhybrids.entity.custom.TheChildEntity;
 
 
 @Mod.EventBusSubscriber(modid = UnusualHybrids.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -15,5 +16,7 @@ public class ModEvents {
     public static void registerAttributes(EntityAttributeCreationEvent event) {
         event.put(ModEntities.INDOM.get(), IndominousRexEntity.createAttributes().build());
         event.put(ModEntities.MAJUNGARAPTOR.get(), MajungaraptorEntity.createAttributes().build());
+        event.put(ModEntities.CHILD.get(), TheChildEntity.createAttributes().build());
+
     }
 }

@@ -20,6 +20,14 @@
     ],
     "subtitle": "unusualhybrids.sound.subtitle.indom_idle"
   },
+  "talon": {
+    "sounds":[
+      {
+        "name": "unusualhybrids:talon",
+        "stream": true
+      }
+    ]
+  },
   "indom_hurt": {
   "category": "neutral",
   "sounds": [

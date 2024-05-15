@@ -16,6 +16,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.thevaliantsquidward.unusualhybrids.entity.ModEntities;
 import net.thevaliantsquidward.unusualhybrids.entity.client.IndominousRexRenderer;
 import net.thevaliantsquidward.unusualhybrids.entity.client.MajungaraptorRenderer;
+import net.thevaliantsquidward.unusualhybrids.entity.client.TheChildRenderer;
 import net.thevaliantsquidward.unusualhybrids.entity.custom.IndominousRexEntity;
 import net.thevaliantsquidward.unusualhybrids.item.ModCreativeModeTabs;
 import net.thevaliantsquidward.unusualhybrids.item.ModItems;
@@ -72,6 +73,8 @@ public class UnusualHybrids
                     (ModEntities.INDOM.get(), IndominousRexRenderer:: new);
             EntityRenderers.register
                     (ModEntities.MAJUNGARAPTOR.get(), MajungaraptorRenderer:: new);
+            EntityRenderers.register
+                    (ModEntities.CHILD.get(), TheChildRenderer:: new);
         }
     }
 }

@@ -8,6 +8,9 @@
   "item.unusualhybrids.indominus_rex_spawn_egg" : "Indominus Rex Spawn Egg",
   "item.unusualhybrids.majungaraptor_spawn_egg" : "Majungaraptor Spawn Egg",
 
+  "item.unusualhybrids.talon" : "Music Disc",
+  "item.unusualhybrids.talon.desc" : "TheValiantSquidward - Talon",
+
   "block.unusualhybrids.hybridizer" : "Hybridizer",
 
   "creativetab.hybrid_tab" : "Unusual Hybrids",
