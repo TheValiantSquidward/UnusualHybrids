@@ -36,6 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.thevaliantsquidward.unusualhybrids.ModTags;
+import net.thevaliantsquidward.unusualhybrids.entity.ModEntities;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
@@ -46,16 +47,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MajungaraptorEntity extends EntityBaseDinosaurAnimal {
+public class MajungaraptorEntity extends EntityClimber {
     private static final EntityDataAccessor<Boolean> PRESS = SynchedEntityData.defineId(MajungaraptorEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> SCALE = SynchedEntityData.defineId(MajungaraptorEntity.class, EntityDataSerializers.INT);
 
     protected boolean pushingState = false;
-    private static final RawAnimation VELOCI_WALK = RawAnimation.begin().thenLoop("animation.velociraptor.walk");
+    private static final RawAnimation VELOCI_WALK = RawAnimation.begin().thenLoop("animation.majungaraptor.walk");
     private static final RawAnimation VELOCI_IDLE = RawAnimation.begin().thenLoop("animation.majungaraptor.idle");
     private static final RawAnimation VELOCI_ATTACK = RawAnimation.begin().thenLoop("animation.velociraptor.attack");
     private static final RawAnimation VELOCI_SWIM = RawAnimation.begin().thenLoop("animation.velociraptor.swim");
-    public MajungaraptorEntity(EntityType<? extends Animal> entityType, Level level) {
+    public MajungaraptorEntity(EntityType<? extends EntityBaseDinosaurAnimal> entityType, Level level) {
         super(entityType, level);
         ((GroundPathNavigation) this.getNavigation()).setCanOpenDoors(true);
         this.setMaxUpStep(1.0F);
@@ -414,7 +415,7 @@ public class MajungaraptorEntity extends EntityBaseDinosaurAnimal {
     @Nullable
     @Override
     public AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
-        return UPEntities.VELOCI.get().create(serverLevel);
+        return ModEntities.MAJUNGARAPTOR.get().create(serverLevel);
     }
 
 

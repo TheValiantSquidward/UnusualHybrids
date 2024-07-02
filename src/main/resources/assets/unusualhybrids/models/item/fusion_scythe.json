@@ -1,0 +1,18 @@
+{
+  "parent": "minecraft:item/handheld",
+  "loader": "forge:separate_transforms",
+  "textures": {
+    "layer0": "unusualhybrids:item/fusion_scythe_gui"
+  },
+  "base": {
+    "parent": "unusualhybrids:item/fusion_scythe_handheld"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "unusualhybrids:item/fusion_scythe_gui"
+    },
+    "fixed": {
+      "parent": "unusualhybrids:item/fusion_scythe_gui"
+    }
+  }
+}

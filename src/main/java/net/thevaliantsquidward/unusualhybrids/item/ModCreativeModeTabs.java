@@ -25,8 +25,16 @@ public class ModCreativeModeTabs {
 
 
                         pOutput.accept(ModItems.INDOM_SCALES.get());
+
+                        pOutput.accept(ModItems.TALON.get());
+                        pOutput.accept(ModItems.FUSION_SCYTHE.get());
+
                         pOutput.accept(ModItems.INDOM_FLASK.get());
+                        pOutput.accept(ModItems.MAJUNGAR_FLASK.get());
+
+
                         pOutput.accept(ModItems.INDOM_SPAWN_EGG.get());
+                        pOutput.accept(ModItems.MAJUNGAR_SPAWN_EGG.get());
 
 
 

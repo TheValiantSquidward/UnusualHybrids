@@ -26,6 +26,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -50,8 +51,10 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.thevaliantsquidward.unusualhybrids.ModTags;
 import net.thevaliantsquidward.unusualhybrids.sound.ModSounds;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
@@ -67,23 +70,25 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
     private static final EntityDataAccessor<Integer> ENTITY_STATE = SynchedEntityData.defineId(IndominousRexEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> EEPY = SynchedEntityData.defineId(IndominousRexEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(IndominousRexEntity.class, EntityDataSerializers.INT);
-    
+
     private static final EntityDataAccessor<Integer> VARIANTEYECOLOR = SynchedEntityData.defineId(IndominousRexEntity.class, EntityDataSerializers.INT);
 
 
-    
+
 
     public int timeUntilDrops = this.random.nextInt(12000) + 24000;
     private int passiveFor = 0;
     private int shakeCooldown = 0;
 
     private int stunnedTick;
-    private static final RawAnimation REX_BITE = RawAnimation.begin().thenLoop("animation.indominous.bite2");
-    private static final RawAnimation REX_BITE_2 = RawAnimation.begin().thenLoop("animation.indominous.bite2");
-    private static final RawAnimation REX_WHIP = RawAnimation.begin().thenLoop("animation.indominous.idle");
-    private static final RawAnimation REX_STOMP_L = RawAnimation.begin().thenLoop("animation.indominous.idle");
-    private static final RawAnimation REX_STOMP_R = RawAnimation.begin().thenLoop("animation.indominous.idle");
-    private static final RawAnimation REX_EEPY = RawAnimation.begin().thenLoop("animation.indominous.sleep");
+    private static final RawAnimation REX_BITE = RawAnimation.begin().thenPlay("animation.indominous.bite1_blend");
+    private static final RawAnimation REX_BITE_2 = RawAnimation.begin().thenPlay("animation.indominous.bite2_blend");
+    private static final RawAnimation REX_THROW = RawAnimation.begin().thenPlay("animation.indominous.throw");
+
+    private static final RawAnimation REX_WHIP = RawAnimation.begin().thenPlay("animation.indominous.slash_blend");
+    private static final RawAnimation REX_STOMP_L = RawAnimation.begin().thenPlay("animation.indominous.stomp");
+    private static final RawAnimation REX_STOMP_R = RawAnimation.begin().thenPlay("animation.indominous.stomp");
+    private static final RawAnimation REX_EEPY = RawAnimation.begin().thenLoop("animation.indominous.knockout");
     private static final RawAnimation REX_SWIM = RawAnimation.begin().thenLoop("animation.indominous.swim");
     private static final RawAnimation REX_CHARGE = RawAnimation.begin().thenLoop("animation.indominous.run");
     private static final RawAnimation REX_WALK = RawAnimation.begin().thenLoop("animation.indominous.walk");
@@ -530,19 +535,25 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
             double reach = this.getAttackReachSqr(target);
             int animState = this.mob.getAnimationState();
 
-            switch (animState ) {
-                case 21 -> tickBiteAttack();
-                case 22 -> tickWhipAttack();
-                case 23 -> tickStompAttack();
-                case 24 -> tickThrowAttack();
-                default -> {
+            switch (animState) {
+                case 21:
+                    tickBiteAttack();
+                    return;
+                case 22:
+                    tickDoubleSlashAttack();
+                    return;
+                case 23:
+                    tickStompAttack();
+                    return;
+                case 24:
+                    tickThrowAttack();
+                    return;
+            }
                     this.ticksUntilNextPathRecalculation = Math.max(this.ticksUntilNextPathRecalculation - 1, 0);
                     this.ticksUntilNextAttack = Math.max(this.ticksUntilNextPathRecalculation - 1, 0);
                     this.mob.getLookControl().setLookAt(target, 30.0F, 30.0F);
                     this.doMovement(target, distance);
                     this.checkForCloseRangeAttack(distance, reach);
-                }
-            }
         }
 
         protected void doMovement (LivingEntity livingentity, Double d0){
@@ -597,139 +608,120 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
 
 
 
-        protected void tickBiteAttack () {
-            animTime++;
-            if(animTime>=6 && animTime < 9) {
+        protected void tickBiteAttack() {
+            this.animTime++;
+            if (this.animTime >= 7 && this.animTime < 9)
                 preformBiteAttack();
-
-            }
-            if(animTime>=9) {
-                animTime=0;
-
+            if (this.animTime >= 20) {
+                this.animTime = 0;
                 this.mob.setAnimationState(0);
-                this.resetAttackCooldown();
+                resetAttackCooldown();
                 this.ticksUntilNextPathRecalculation = 0;
             }
         }
 
-        protected void tickThrowAttack () {
-            animTime++;
-            if(animTime>=6 && animTime < 9) {
+        protected void tickThrowAttack() {
+            this.animTime++;
+            if (this.animTime >= 16 && this.animTime < 18)
                 preformThrowAttack();
-
-            }
-            if(animTime>=9) {
-                animTime=0;
-
+            if (this.animTime >= 20) {
+                this.animTime = 0;
                 this.mob.setAnimationState(0);
-                this.resetAttackCooldown();
+                resetAttackCooldown();
                 this.ticksUntilNextPathRecalculation = 0;
             }
         }
 
-
-        protected void tickWhipAttack () {
-            animTime++;
-            //this.mob.getNavigation().stop();
-            if(animTime>=15 && animTime < 18) {
-                preformWhipAttack();
-            }
-            if(animTime>=16) {
-                animTime=0;
-
+        protected void tickDoubleSlashAttack() {
+            this.animTime++;
+            if (this.animTime >= 6 && this.animTime < 8)
+                preformDoubleSlashAttack();
+            if (this.animTime >= 10 && this.animTime < 12)
+                preformDoubleSlashAttack();
+            if (this.animTime >= 16) {
+                this.animTime = 0;
                 this.mob.setAnimationState(0);
-                this.resetAttackCooldown();
+                resetAttackCooldown();
                 this.ticksUntilNextPathRecalculation = 0;
-
             }
-
         }
 
-        protected void tickStompAttack () {
-            animTime++;
-            //this.mob.getNavigation().stop();
-            if(animTime>=25 && animTime < 30) {
+        protected void tickStompAttack() {
+            this.animTime++;
+            if (this.animTime >= 17 && this.animTime < 20)
                 preformStompAttack();
-            }
-            if(animTime>=30) {
-                animTime=0;
+            if (this.animTime >= 25) {
+                this.animTime = 0;
                 this.mob.setAnimationState(0);
-                this.resetAttackCooldown();
+                resetAttackCooldown();
                 this.ticksUntilNextPathRecalculation = 0;
             }
-
         }
 
-
-        protected void preformBiteAttack () {
-            Vec3 pos = mob.position();
-            this.mob.playSound(ModSounds.INDOM_BITE.get(), 1.0F, 1.0F);
-            HitboxHelper.LargeAttack(this.mob.damageSources().mobAttack(mob),10.0f, 0.1f, mob, pos,  5.0F, -Math.PI/2, Math.PI/2, -1.0f, 3.0f);
-
+        protected void preformBiteAttack() {
+            Vec3 pos = this.mob.position();
+            this.mob.playSound((SoundEvent)ModSounds.INDOM_BITE.get(), 1.0F, 1.0F);
+            HitboxHelper.LargeAttack(this.mob.damageSources().mobAttack((LivingEntity)this.mob), 10.0F, 0.1F, (PathfinderMob)this.mob, pos, 5.0D, -1.5707963267948966D, 1.5707963267948966D, -1.0D, 3.0D);
         }
-
-
 
         protected void preformThrowAttack() {
-            Vec3 pos = mob.position();
-            this.mob.playSound(UPSounds.REX_TAIL_SWIPE.get(), 1.0F, 1.0F);
-            // Perform the attack with HitboxHelper
-            DamageSource damageSource = this.mob.damageSources().mobAttack(mob);
-            HitboxHelper.LargeAttack(damageSource, 10.0f, 0.1f, mob, pos, 5.0F, -Math.PI/2, Math.PI/2, -1.0f, 3.0f);
-
-            // Find the nearest living entity within a certain range
-            double searchRange = 10.0; // Adjust this value based on your needs
+            Vec3 pos = this.mob.position();
+            this.mob.playSound((SoundEvent) UPSounds.REX_TAIL_SWIPE.get(), 1.0F, 1.0F);
+            DamageSource damageSource = this.mob.damageSources().mobAttack((LivingEntity) this.mob);
+            HitboxHelper.LargeAttack(damageSource, 10.0F, 0.1F, (PathfinderMob) this.mob, pos, 5.0D, -1.5707963267948966D, 1.5707963267948966D, -1.0D, 3.0D);
+            double searchRange = 10.0D;
             List<Entity> entities = this.mob.level().getEntities(this.mob, this.mob.getBoundingBox().inflate(searchRange));
             Entity targetEntity = null;
-
             for (Entity entity : entities) {
                 if (entity instanceof LivingEntity && entity != this.mob) {
                     targetEntity = entity;
                     break;
                 }
             }
-
             if (targetEntity != null) {
-
-                double knockback = 0.7F;
-
+                double knockback = 0.699999988079071D;
                 double knockbackResistance = 0.0D;
+
                 if (targetEntity instanceof LivingEntity) {
                     LivingEntity livingEntity = (LivingEntity) targetEntity;
                     knockbackResistance = livingEntity.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE);
                 }
 
                 double knockbackMultiplier = Math.max(0.0D, 1.0D - knockbackResistance);
-                Vec3 motion = targetEntity.getDeltaMovement().add(0.0D, knockback * knockbackMultiplier, 0.0D);
-                targetEntity.setDeltaMovement(motion);
+                if (targetEntity instanceof Player) {
+                    Vec3 motion = targetEntity.getDeltaMovement().add(0.0D, knockback * knockbackMultiplier + 0.5, 0.0D);
+                    targetEntity.setDeltaMovement(motion);
+                } else {
+                    Vec3 motion = targetEntity.getDeltaMovement().add(0.0D, knockback * knockbackMultiplier, 0.0D);
+                    targetEntity.setDeltaMovement(motion);
+                }
 
             }
         }
 
-        protected void preformWhipAttack () {
-            Vec3 pos = mob.position();
-            this.mob.playSound(UPSounds.REX_TAIL_SWIPE.get(), 1.0F, 1.0F);
-            HitboxHelper.LargeAttack(this.mob.damageSources().mobAttack(mob),10.0f, 2.0f, mob, pos,  8.0F, -Math.PI/2, Math.PI/2, -1.0f, 3.0f);
-
+        protected void preformDoubleSlashAttack() {
+            Vec3 pos = this.mob.position();
+            this.mob.playSound((SoundEvent)UPSounds.REX_TAIL_SWIPE.get(), 1.0F, 1.0F);
+            HitboxHelper.LargeAttack(this.mob.damageSources().mobAttack((LivingEntity)this.mob), 10.0F, 2.0F, (PathfinderMob)this.mob, pos, 8.0D, -1.5707963267948966D, 1.5707963267948966D, -1.0D, 3.0D);
         }
 
-        protected void preformStompAttack () {
-            Vec3 pos = mob.position();
-            this.mob.playSound(UPSounds.REX_STOMP_ATTACK.get(), 1.9F, 1.9F);
-            HitboxHelper.LargeAttack(this.mob.damageSources().mobAttack(mob),25.0f, 2.5f, mob, pos,  7.0F, -Math.PI/2, Math.PI/2, -1.0f, 3.0f);
-            if(this.mob.shakeCooldown <= 0 && UnusualPrehistoryConfig.SCREEN_SHAKE_REX.get()) {
-                double rexShakeRange = UnusualPrehistoryConfig.SCREEN_SHAKE_BRACHI_RANGE.get();
+
+
+        protected void preformStompAttack() {
+            Vec3 pos = this.mob.position();
+            this.mob.playSound((SoundEvent)UPSounds.REX_STOMP_ATTACK.get(), 1.9F, 1.9F);
+            HitboxHelper.LargeAttack(this.mob.damageSources().mobAttack((LivingEntity)this.mob), 25.0F, 2.5F, (PathfinderMob)this.mob, pos, 7.0D, -1.5707963267948966D, 1.5707963267948966D, -1.0D, 3.0D);
+            if (this.mob.shakeCooldown <= 0 && ((Boolean)UnusualPrehistoryConfig.SCREEN_SHAKE_REX.get()).booleanValue()) {
+                double rexShakeRange = ((Double)UnusualPrehistoryConfig.SCREEN_SHAKE_BRACHI_RANGE.get()).doubleValue();
                 List<LivingEntity> list = this.mob.level().getEntitiesOfClass(LivingEntity.class, this.mob.getBoundingBox().inflate(rexShakeRange));
                 for (LivingEntity e : list) {
-                    if (!(e instanceof IndominousRexEntity) && e.isAlive()) {
-                        e.addEffect(new MobEffectInstance(UPEffects.SCREEN_SHAKE.get(), 10, 3, false, false, false));
-                    }
+                    if (!(e instanceof IndominousRexEntity) && e.isAlive())
+                        e.addEffect(new MobEffectInstance((MobEffect)UPEffects.SCREEN_SHAKE.get(), 10, 3, false, false, false));
                 }
-                mob.shakeCooldown = 100;
+                this.mob.shakeCooldown = 100;
             }
-            mob.shakeCooldown--;
+            this.mob.shakeCooldown--;
         }
-
 
         protected void resetAttackCooldown () {
             this.ticksUntilNextAttack = 0;
@@ -768,6 +760,11 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
         this.gameEvent(GameEvent.ENTITY_DIE);
     }
 
+    @Override
+    protected boolean isImmobile() {
+        return super.isImmobile() || this.hasEepy();
+    }
+
     public boolean canBeAffected(MobEffectInstance p_33809_) {
         if (p_33809_.getEffect() == MobEffects.WEAKNESS) {
             net.minecraftforge.event.entity.living.MobEffectEvent.Applicable event = new net.minecraftforge.event.entity.living.MobEffectEvent.Applicable(this, p_33809_);
@@ -791,78 +788,64 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
     }
 
 
-    protected <E extends IndominousRexEntity> PlayState Controller(final software.bernie.geckolib.core.animation.AnimationState<E> event) {
-        if(this.isFromBook()){
+    protected <E extends IndominousRexEntity> PlayState Controller(software.bernie.geckolib.core.animation.AnimationState<E> event) {
+        if (isFromBook())
+            return PlayState.CONTINUE;
+        int animState = getAnimationState();
+        switch (animState) {
+            case 23:
+                event.setAndContinue(REX_STOMP_L);
+                return PlayState.CONTINUE;
+            case 24:
+                event.setAndContinue(REX_THROW);
+                return PlayState.CONTINUE;
+        }
+        if (hasEepy()) {
+            event.setAndContinue(REX_EEPY);
+            event.getController().setAnimationSpeed(1.0D);
             return PlayState.CONTINUE;
         }
-        int animState = this.getAnimationState();
-        {
-            switch (animState) {
-
-
-                case 22:
-                    event.setAndContinue(REX_WHIP);
-                    break;
-                case 23:
-                    event.setAndContinue(REX_STOMP_L);
-                    break;
-                case 24:
-                    event.setAndContinue(REX_STOMP_R);
-                    break;
-                case 25:
-                    event.setAndContinue(REX_BITE_2);
-                    break;
-                default:
-                    if (this.hasEepy()) {
-                        event.setAndContinue(REX_EEPY);
-                        event.getController().setAnimationSpeed(1.0F);
-                        return PlayState.CONTINUE;
-                    }
-                    if (this.isInWater()) {
-                        event.setAndContinue(REX_SWIM);
-                        event.getController().setAnimationSpeed(1.0F);
-                        return PlayState.CONTINUE;
-                    }
-                    else if(this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6 && !this.isSwimming() && ! this.isInWater()){
-                        if(this.isSprinting()) {
-                            event.setAndContinue(REX_CHARGE);
-                            event.getController().setAnimationSpeed(1.0F);
-                            return PlayState.CONTINUE;
-                        } else {
-                            event.setAndContinue(REX_WALK);
-                            event.getController().setAnimationSpeed(1.0F);
-                            return PlayState.CONTINUE;
-                        }
-                    }else{
-
-                        if(!this.isInWater()) {
-                            event.setAndContinue(REX_IDLE);
-                            event.getController().setAnimationSpeed(1.0F);
-                            return PlayState.CONTINUE;
-                        }
-                    }
-
+        if (isInWater()) {
+            event.setAndContinue(REX_SWIM);
+            event.getController().setAnimationSpeed(1.0D);
+            return PlayState.CONTINUE;
+        }
+        if (this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6 && !this.isSwimming() && ! this.isInWater()) {
+            if (this.isSprinting()) {
+                event.setAndContinue(REX_CHARGE);
+                event.getController().setAnimationSpeed(1.0D);
+                return PlayState.CONTINUE;
             }
+            event.setAndContinue(REX_WALK);
+            event.getController().setAnimationSpeed(1.0D);
+            return PlayState.CONTINUE;
+        }
+        if (!this.isInWater()) {
+            event.setAndContinue(REX_IDLE);
+            event.getController().setAnimationSpeed(1.0D);
+            return PlayState.CONTINUE;
         }
         return PlayState.CONTINUE;
     }
 
-    protected <E extends IndominousRexEntity> PlayState attackController(final software.bernie.geckolib.core.animation.AnimationState<E> event) {
-        int animState = this.getAnimationState();
+    protected <E extends IndominousRexEntity> PlayState attackController(AnimationState<E> event) {
+        int animState = getAnimationState();
+        if (isFromBook())
+            return PlayState.CONTINUE;
         switch (animState) {
-
+            case 22:
+                event.setAndContinue(REX_WHIP);
+                break;
             case 21:
                 event.setAndContinue(REX_BITE);
                 break;
-            default:
         }
         return PlayState.CONTINUE;
     }
 
-    @Override
-    public void registerControllers(final AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "Normal", 5, this::Controller));
-        controllers.add(new AnimationController<>(this, "Attack", 0, this::attackController));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController[] { new AnimationController((GeoAnimatable)this, "Normal", 5, this::Controller) });
+        controllers.add(new AnimationController[] { new AnimationController((GeoAnimatable)this, "Attack", 0, this::attackController) });
     }
 
     @Override

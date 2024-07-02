@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "unusualhybrids:item/fusion_scythe"
+  }
+}

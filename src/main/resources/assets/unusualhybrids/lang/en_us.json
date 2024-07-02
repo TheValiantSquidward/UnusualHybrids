@@ -5,11 +5,13 @@
   "item.unusualhybrids.carbon_sludge" : "Carbon Sludge",
   "item.unusualhybrids.indominus_scales" : "Indominus Rex Scales",
   "item.unusualhybrids.indominus_rex_dna_flask" : "Indominus Rex DNA Flask",
+  "item.unusualhybrids.majungar_flask" : "Majungaraptor DNA Flask",
   "item.unusualhybrids.indominus_rex_spawn_egg" : "Indominus Rex Spawn Egg",
   "item.unusualhybrids.majungaraptor_spawn_egg" : "Majungaraptor Spawn Egg",
 
   "item.unusualhybrids.talon" : "Music Disc",
   "item.unusualhybrids.talon.desc" : "TheValiantSquidward - Talon",
+  "item.unusualhybrids.fusion_scythe" : "Chimeric Scythe",
 
   "block.unusualhybrids.hybridizer" : "Hybridizer",
 

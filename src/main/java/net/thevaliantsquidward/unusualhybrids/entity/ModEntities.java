@@ -1,6 +1,7 @@
 package net.thevaliantsquidward.unusualhybrids.entity;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -30,6 +31,8 @@ public class ModEntities {
     public static final RegistryObject<EntityType<TheChildEntity>> CHILD = ENTITY_TYPES.register("baby_indom",
             () -> EntityType.Builder.of(TheChildEntity::new, MobCategory.CREATURE).sized(1.2F, 1.2F)
                     .build(new ResourceLocation(UnusualHybrids.MOD_ID, "baby_indom").toString()));
+
+
 
     public static void register(IEventBus eventBus) {
         ENTITY_TYPES.register(eventBus);
