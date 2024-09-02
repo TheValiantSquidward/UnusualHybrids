@@ -24,18 +24,14 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ButtonBlock;
-import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.thevaliantsquidward.unusualhybrids.ModTags;
+import net.thevaliantsquidward.unusualhybrids.tag.ModTags;
 import net.thevaliantsquidward.unusualhybrids.entity.ModEntities;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -43,9 +39,6 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 public class MajungaraptorEntity extends EntityClimber {
     private static final EntityDataAccessor<Boolean> PRESS = SynchedEntityData.defineId(MajungaraptorEntity.class, EntityDataSerializers.BOOLEAN);
@@ -56,6 +49,7 @@ public class MajungaraptorEntity extends EntityClimber {
     private static final RawAnimation VELOCI_IDLE = RawAnimation.begin().thenLoop("animation.majungaraptor.idle");
     private static final RawAnimation VELOCI_ATTACK = RawAnimation.begin().thenLoop("animation.velociraptor.attack");
     private static final RawAnimation VELOCI_SWIM = RawAnimation.begin().thenLoop("animation.velociraptor.swim");
+    private static final RawAnimation MAJUNGAR_RUN = RawAnimation.begin().thenLoop("animation.majungaraptor.run");
     public MajungaraptorEntity(EntityType<? extends EntityBaseDinosaurAnimal> entityType, Level level) {
         super(entityType, level);
         ((GroundPathNavigation) this.getNavigation()).setCanOpenDoors(true);
@@ -207,7 +201,7 @@ public class MajungaraptorEntity extends EntityClimber {
 
     @Override
     protected TagKey<EntityType<?>> getTargetTag() {
-        return UPTags.RAPTOR_TARGETS;
+        return ModTags.MAJUNGAR_TARGETS;
     }
 
     @Override
@@ -430,6 +424,11 @@ public class MajungaraptorEntity extends EntityClimber {
         }
         if (this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6 && !this.isInWater()) {
             {
+                if (this.isSprinting()) {
+                    event.setAndContinue(MAJUNGAR_RUN);
+                    event.getController().setAnimationSpeed(1.0D);
+                    return PlayState.CONTINUE;
+                }
                 event.setAndContinue(VELOCI_WALK);
                 event.getController().setAnimationSpeed(1.5D);
                 return PlayState.CONTINUE;

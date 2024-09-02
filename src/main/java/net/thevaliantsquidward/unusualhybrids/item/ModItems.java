@@ -34,6 +34,10 @@ public class ModItems {
     public static final RegistryObject<Item> TALON = ITEMS.register("talon",
             () -> new RecordItem(10, ModSounds.TALON, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC), 2060));
 
+    public static final RegistryObject<Item> INDOMITABLE = ITEMS.register("indomitable",
+            () -> new RecordItem(4, ModSounds.INDOMITABLE, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC), 1920));
+
+
     public static final RegistryObject<Item> FUSION_SCYTHE = ITEMS.register("fusion_scythe", () -> new FusionScytheItem(ModItemTiers.MAJUNGAR, 6, -2.1F));
 
     public static ItemStack checkEachHandForScythe(LivingEntity entity) {

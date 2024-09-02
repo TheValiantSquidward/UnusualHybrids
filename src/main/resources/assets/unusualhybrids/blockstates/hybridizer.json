@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "unusualhybrids:block/hybridizer",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "unusualhybrids:block/hybridizer"
+    },
+    "facing=south": {
+      "model": "unusualhybrids:block/hybridizer",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "unusualhybrids:block/hybridizer",
+      "y": 270
+    }
+  }
+}

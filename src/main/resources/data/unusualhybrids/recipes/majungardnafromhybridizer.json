@@ -1,0 +1,16 @@
+{
+  "type": "unusualhybrids:hybridizing",
+  "ingredients": [
+    {
+      "item": "unusualprehistory:raptor_flask"
+    },
+    {
+      "item": "unusualprehistory:majunga_flask"
+    }
+  ],
+  "output": {
+    "item": "unusualhybrids:majungar_flask",
+    "count": 1
+  },
+  "maxProgress": 600
+}

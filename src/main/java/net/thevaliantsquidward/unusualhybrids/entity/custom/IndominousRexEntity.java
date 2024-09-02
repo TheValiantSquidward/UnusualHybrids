@@ -2,14 +2,12 @@ package net.thevaliantsquidward.unusualhybrids.entity.custom;
 
 import com.peeko32213.unusualprehistory.common.config.UnusualPrehistoryConfig;
 import com.peeko32213.unusualprehistory.common.entity.EntityVelociraptor;
-import com.peeko32213.unusualprehistory.common.entity.msc.baby.EntityBeelzebufoTadpole;
 import com.peeko32213.unusualprehistory.common.entity.msc.util.CustomRandomStrollGoal;
 import com.peeko32213.unusualprehistory.common.entity.msc.util.HitboxHelper;
 import com.peeko32213.unusualprehistory.common.entity.msc.util.dino.EntityBaseDinosaurAnimal;
 import com.peeko32213.unusualprehistory.core.registry.UPEffects;
 import com.peeko32213.unusualprehistory.core.registry.UPItems;
 import com.peeko32213.unusualprehistory.core.registry.UPSounds;
-import com.peeko32213.unusualprehistory.core.registry.UPTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -17,9 +15,9 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -38,7 +36,6 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -49,7 +46,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.thevaliantsquidward.unusualhybrids.ModTags;
+import net.thevaliantsquidward.unusualhybrids.tag.ModTags;
 import net.thevaliantsquidward.unusualhybrids.sound.ModSounds;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -94,6 +91,8 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
     private static final RawAnimation REX_WALK = RawAnimation.begin().thenLoop("animation.indominous.walk");
     private static final RawAnimation REX_IDLE = RawAnimation.begin().thenLoop("animation.indominous.idle");
     private static final RawAnimation PLACEHOLDER = RawAnimation.begin().thenLoop("animation.indominous.idle");
+    private static final RawAnimation SCRATCH = RawAnimation.begin().thenPlay("animation.indominous.scratch");
+    private static final RawAnimation YAWN = RawAnimation.begin().thenPlay("animation.indominous.yawn_blend");
 
     public IndominousRexEntity(EntityType<? extends Animal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -303,6 +302,8 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
         this.entityData.define(EEPY, false);
         this.entityData.define(VARIANT, 0);
         this.entityData.define(VARIANTEYECOLOR, 0);
+        this.entityData.define(RANDOM_BOOL, false);
+        this.entityData.define(RANDOM_NUMBER,0);
     }
 
     @Nullable
@@ -318,6 +319,7 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
         return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
+
     @Override
     public void handleEntityEvent(byte pId) {
         if (pId == 39) {
@@ -330,6 +332,9 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
 
     public void tick() {
         super.tick();
+
+        getRandomAnimationNumber();
+
 
         if (this.shouldBeEepy()) {
             this.setEepy(true);
@@ -820,13 +825,50 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
             event.getController().setAnimationSpeed(1.0D);
             return PlayState.CONTINUE;
         }
-        if (!this.isInWater()) {
-            event.setAndContinue(REX_IDLE);
-            event.getController().setAnimationSpeed(1.0D);
-            return PlayState.CONTINUE;
-        }
+         if (!this.isInWater()) {
+             event.setAndContinue(REX_IDLE);
+             event.getController().setAnimationSpeed(1.0D);
+             return PlayState.CONTINUE;
+         }
+
         return PlayState.CONTINUE;
     }
+    private boolean isStillEnough() {
+        return this.getDeltaMovement().horizontalDistance() < 0.05;
+    }
+
+
+    public int getRandomAnimationNumber(int nr) {
+        setRandomNumber(random.nextInt(nr));
+        return getRandomNumber();
+    }
+    public int getRandomAnimationNumber() {
+        setRandomNumber(random.nextInt(100));
+        return getRandomNumber();
+    }
+    public int getRandomNumber() {
+        return this.entityData.get(RANDOM_NUMBER);
+    }
+
+    public void setRandomNumber(int nr) {
+        this.entityData.set(RANDOM_NUMBER,nr);
+    }
+
+    public boolean getRandomAnimationBool() {
+        setRandomBool(random.nextBoolean());
+        return getRandomBool();
+    }
+    private static final EntityDataAccessor<Integer> RANDOM_NUMBER = SynchedEntityData.defineId(IndominousRexEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> RANDOM_BOOL = SynchedEntityData.defineId(IndominousRexEntity.class, EntityDataSerializers.BOOLEAN);
+
+    public boolean getRandomBool() {
+        return this.entityData.get(RANDOM_BOOL);
+    }
+
+    public void setRandomBool(boolean bool) {
+        this.entityData.set(RANDOM_BOOL,bool);
+    }
+
 
     protected <E extends IndominousRexEntity> PlayState attackController(AnimationState<E> event) {
         int animState = getAnimationState();
@@ -843,9 +885,25 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
         return PlayState.CONTINUE;
     }
 
+    protected <E extends IndominousRexEntity> PlayState idleController(AnimationState<E> event) {
+        int animState = getAnimationState();
+        if (isStillEnough() && !this.isAggressive() && getRandomAnimationNumber() == 0 && !this.isSwimming()) {
+            int rand = getRandomAnimationNumber();
+            if (rand > 4) {
+                return event.setAndContinue(SCRATCH);
+            }
+            if (rand > 2) {
+                return event.setAndContinue(YAWN);
+            }
+        }
+        return PlayState.CONTINUE;
+    }
+
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController[] { new AnimationController((GeoAnimatable)this, "Normal", 5, this::Controller) });
         controllers.add(new AnimationController[] { new AnimationController((GeoAnimatable)this, "Attack", 0, this::attackController) });
+        controllers.add(new AnimationController[] { new AnimationController((GeoAnimatable)this, "Idle", 0, this::idleController) });
+
     }
 
     @Override

@@ -27,6 +27,13 @@
         "stream": true
       }
     ]
+  }, "indomitable": {
+    "sounds":[
+      {
+        "name": "unusualhybrids:indomitable",
+        "stream": true
+      }
+    ]
   },
   "indom_hurt": {
   "category": "neutral",

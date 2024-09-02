@@ -1,0 +1,16 @@
+{
+  "type": "unusualhybrids:hybridizing",
+  "ingredients": [
+    {
+      "item": "unusualhybrids:majungar_flask"
+    },
+    {
+      "item": "unusualprehistory:rex_flask"
+    }
+  ],
+  "output": {
+    "item": "unusualhybrids:indominus_rex_dna_flask",
+    "count": 1
+  },
+  "maxProgress": 1800
+}

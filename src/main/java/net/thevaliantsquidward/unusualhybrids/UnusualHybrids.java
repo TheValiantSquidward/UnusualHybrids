@@ -18,6 +18,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.thevaliantsquidward.unusualhybrids.block.ModBlocks;
+import net.thevaliantsquidward.unusualhybrids.block.entity.ModBlockEntities;
 import net.thevaliantsquidward.unusualhybrids.entity.ModEntities;
 import net.thevaliantsquidward.unusualhybrids.entity.client.IndominousRexRenderer;
 import net.thevaliantsquidward.unusualhybrids.entity.client.MajungaraptorRenderer;
@@ -26,6 +28,10 @@ import net.thevaliantsquidward.unusualhybrids.entity.custom.IndominousRexEntity;
 import net.thevaliantsquidward.unusualhybrids.item.ModCreativeModeTabs;
 import net.thevaliantsquidward.unusualhybrids.item.ModItems;
 import net.thevaliantsquidward.unusualhybrids.item.custom.FusionScytheItem;
+import net.thevaliantsquidward.unusualhybrids.loot.ModLootModifiers;
+import net.thevaliantsquidward.unusualhybrids.recipe.ModRecipes;
+import net.thevaliantsquidward.unusualhybrids.screen.HybridizerScreen;
+import net.thevaliantsquidward.unusualhybrids.screen.ModMenuTypes;
 import net.thevaliantsquidward.unusualhybrids.sound.ModSounds;
 import org.slf4j.Logger;
 
@@ -45,6 +51,16 @@ public class UnusualHybrids
         ModEntities.register(modEventBus);
 
         ModItems.register(modEventBus);
+
+        ModBlocks.register(modEventBus);
+
+        ModBlockEntities.register(modEventBus);
+
+        ModMenuTypes.register(modEventBus);
+
+        ModLootModifiers.register(modEventBus);
+
+        ModRecipes.register(modEventBus);
 
         ModSounds.register(modEventBus);
 
@@ -81,6 +97,10 @@ public class UnusualHybrids
                     (ModEntities.MAJUNGARAPTOR.get(), MajungaraptorRenderer:: new);
             EntityRenderers.register
                     (ModEntities.CHILD.get(), TheChildRenderer:: new);
+
+            MenuScreens.register(ModMenuTypes.HYBRIDIZER_MENU.get(), HybridizerScreen::new);
         }
+
+
     }
 }

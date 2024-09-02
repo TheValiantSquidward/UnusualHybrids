@@ -11,6 +11,10 @@
 
   "item.unusualhybrids.talon" : "Music Disc",
   "item.unusualhybrids.talon.desc" : "TheValiantSquidward - Talon",
+
+  "item.unusualhybrids.indomitable" : "Music Disc",
+  "item.unusualhybrids.indomitable.desc" : "TheValiantSquidward - Indomitable",
+
   "item.unusualhybrids.fusion_scythe" : "Chimeric Scythe",
 
   "block.unusualhybrids.hybridizer" : "Hybridizer",
@@ -19,6 +23,9 @@
 
   "unusualhybrids.advancement.interact_indom" : "Bigger. Louder. More Teeth.",
   "unusualhybrids.advancement.interact_indom.desc" : "Revive the Mighty Indominus Rex",
+
+  "unusualhybrids.advancement.interact_majungar" : "Not-So Clever Girl",
+  "unusualhybrids.advancement.interact_majungar.desc" : "Revive a Majungaraptor",
 
   "unusualhybrids.advancement.obtain_carbon_sludge" : "Diamond in the Ooze",
   "unusualhybrids.advancement.obtain_carbon_sludge.desc" : "Acquire Carbon Sludge"

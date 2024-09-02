@@ -19,6 +19,8 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> INDOM_HURT = createSoundEvent("indom_hurt");
     public static final RegistryObject<SoundEvent> INDOM_IDLE = createSoundEvent("indom_idle");
     public static final RegistryObject<SoundEvent> TALON = createSoundEvent("talon");
+
+    public static final RegistryObject<SoundEvent> INDOMITABLE = createSoundEvent("indomitable");
     private static RegistryObject<SoundEvent> createSoundEvent(String name) {
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(UnusualHybrids.MOD_ID, name)));
     }

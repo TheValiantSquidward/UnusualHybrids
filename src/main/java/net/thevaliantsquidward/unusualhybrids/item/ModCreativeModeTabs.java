@@ -9,6 +9,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import net.thevaliantsquidward.unusualhybrids.UnusualHybrids;
+import net.thevaliantsquidward.unusualhybrids.block.ModBlocks;
 
 
 public class ModCreativeModeTabs {
@@ -27,11 +28,13 @@ public class ModCreativeModeTabs {
                         pOutput.accept(ModItems.INDOM_SCALES.get());
 
                         pOutput.accept(ModItems.TALON.get());
+                        pOutput.accept(ModItems.INDOMITABLE.get());
                         pOutput.accept(ModItems.FUSION_SCYTHE.get());
+
+                        pOutput.accept(ModBlocks.HYBRIDIZER.get());
 
                         pOutput.accept(ModItems.INDOM_FLASK.get());
                         pOutput.accept(ModItems.MAJUNGAR_FLASK.get());
-
 
                         pOutput.accept(ModItems.INDOM_SPAWN_EGG.get());
                         pOutput.accept(ModItems.MAJUNGAR_SPAWN_EGG.get());

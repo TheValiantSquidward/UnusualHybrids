@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "unusualhybrids:majungar_talon"
+    },
+    "E": {
+      "item": "unusualprehistory:raptor_feathers"
+    }
+  },
+  "pattern": [
+    "XXE",
+    " # ",
+    " # "
+  ],
+  "result": {
+    "item": "unusualhybrids:fusion_scythe"
+  },
+  "show_notification": true
+}
