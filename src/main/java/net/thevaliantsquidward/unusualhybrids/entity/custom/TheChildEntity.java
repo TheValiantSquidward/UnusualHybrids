@@ -2,6 +2,7 @@ package net.thevaliantsquidward.unusualhybrids.entity.custom;
 
 import com.peeko32213.unusualprehistory.common.entity.msc.util.BabyPanicGoal;
 import com.peeko32213.unusualprehistory.common.entity.msc.util.LandCreaturePathNavigation;
+import com.peeko32213.unusualprehistory.common.entity.msc.util.dino.EntityBaseDinosaurAnimal;
 import com.peeko32213.unusualprehistory.common.entity.msc.util.dino.EntityTameableBaseDinosaurAnimal;
 import com.peeko32213.unusualprehistory.core.registry.UPEntities;
 import com.peeko32213.unusualprehistory.core.registry.UPItems;
@@ -9,18 +10,19 @@ import com.peeko32213.unusualprehistory.core.registry.UPSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -31,23 +33,25 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.thevaliantsquidward.unusualhybrids.entity.ModEntities;
+import net.thevaliantsquidward.unusualhybrids.sound.ModSounds;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class TheChildEntity extends EntityTameableBaseDinosaurAnimal {
+public class TheChildEntity extends EntityBaseDinosaurAnimal {
     
     public static final int MAX_TADPOLE_AGE = Math.abs(-30000);
     public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.CHICKEN, UPItems.RAW_COTY.get());
     private int age;
-    private static final RawAnimation BABY_WALK = RawAnimation.begin().thenLoop("animation.babyrex.walk");
-    private static final RawAnimation BABY_IDLE = RawAnimation.begin().thenLoop("animation.babyrex.idle");
-    private static final RawAnimation BABY_SWIM = RawAnimation.begin().thenLoop("animation.babyrex.swim");
-    public TheChildEntity(EntityType<? extends EntityTameableBaseDinosaurAnimal> entityType, Level level) {
+    private static final RawAnimation BABY_WALK = RawAnimation.begin().thenLoop("animation.indominousbaby.walk");
+    private static final RawAnimation BABY_IDLE = RawAnimation.begin().thenLoop("animation.indominousbaby.idle");
+    private static final RawAnimation BABY_SWIM = RawAnimation.begin().thenLoop("animation.indominousbaby.swim");
+    public TheChildEntity(EntityType<? extends EntityBaseDinosaurAnimal> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -75,10 +79,6 @@ public class TheChildEntity extends EntityTameableBaseDinosaurAnimal {
         this.targetSelector.addGoal(8, (new HurtByTargetGoal(this)));
     }
 
-    @Override
-    protected void performAttack() {
-
-    }
 
     protected SoundEvent getAmbientSound() {
         return UPSounds.REX_IDLE.get();
@@ -117,18 +117,58 @@ public class TheChildEntity extends EntityTameableBaseDinosaurAnimal {
 
     private void eatFood(Player player, ItemStack stack) {
         this.decrementItem(player, stack);
+        this.playSound(SoundEvents.GENERIC_EAT, 0.1F, 1.0F);
         this.increaseAge((int) ((float) (this.getTicksUntilGrowth() / 20) * 0.1F));
         this.level().addParticle(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0D), this.getRandomY() + 0.5D, this.getRandomZ(1.0D), 0.0D, 0.0D, 0.0D);
     }
 
+    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(IndominousRexEntity.class, EntityDataSerializers.INT);
+
     public void addAdditionalSaveData(CompoundTag p_218709_) {
         super.addAdditionalSaveData(p_218709_);
         p_218709_.putInt("Age", this.age);
+        p_218709_.putInt("Variant", this.getVariant());
+        p_218709_.putInt("VariantEyeColor", this.getVariantEyeColor());
     }
+    public void setVariantEyecolor(int variant) {
+        this.entityData.set(VARIANTEYECOLOR, Integer.valueOf(variant));
+    }
+    public int getVariantEyeColor() {
+        return this.entityData.get(VARIANTEYECOLOR);
+    }
+    private static final EntityDataAccessor<Integer> VARIANTEYECOLOR = SynchedEntityData.defineId(IndominousRexEntity.class, EntityDataSerializers.INT);
 
     public void readAdditionalSaveData(CompoundTag p_218698_) {
         super.readAdditionalSaveData(p_218698_);
         this.setAge(p_218698_.getInt("Age"));
+        this.setVariant(p_218698_.getInt("Variant"));
+        this.setVariantEyecolor(p_218698_.getInt("VariantEyeColor"));
+    }
+    @javax.annotation.Nullable
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @javax.annotation.Nullable SpawnGroupData spawnDataIn, @javax.annotation.Nullable CompoundTag dataTag) {
+        float variantChange = this.getRandom().nextFloat();
+        if(variantChange <= 0.07F){
+            this.setVariant(1);
+            this.setVariantEyecolor(1);
+        }else{
+            this.setVariant(0);
+            this.setVariantEyecolor(0);
+        }
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    }
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(VARIANT, 0);
+        this.entityData.define(VARIANTEYECOLOR, 0);
+    }
+
+    public int getVariant() {
+        return this.entityData.get(VARIANT);
+    }
+
+    public void setVariant(int variant) {
+        this.entityData.set(VARIANT, variant);
     }
 
     private void decrementItem(Player player, ItemStack stack) {
@@ -151,6 +191,13 @@ public class TheChildEntity extends EntityTameableBaseDinosaurAnimal {
         this.age = age;
         if (this.age >= MAX_TADPOLE_AGE) this.growUp();
     }
+    public static String getVariantName(int variant) {
+        return switch (variant) {
+            case 1 -> "black";
+            default -> "white";
+        };
+    }
+
 
     private void growUp() {
         if (this.level() instanceof ServerLevel server) {
@@ -158,6 +205,7 @@ public class TheChildEntity extends EntityTameableBaseDinosaurAnimal {
             if (frog == null) return;
 
             frog.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
+            frog.setVariant(this.getVariant());
             frog.finalizeSpawn(server, this.level().getCurrentDifficultyAt(frog.blockPosition()), MobSpawnType.CONVERSION, null, null);
             frog.setNoAi(this.isNoAi());
             if (this.hasCustomName()) {
@@ -171,6 +219,8 @@ public class TheChildEntity extends EntityTameableBaseDinosaurAnimal {
             this.discard();
         }
     }
+
+
 
     public void checkDespawn() {
         if (this.level().getDifficulty() == Difficulty.PEACEFUL && this.shouldDespawnInPeaceful()) {

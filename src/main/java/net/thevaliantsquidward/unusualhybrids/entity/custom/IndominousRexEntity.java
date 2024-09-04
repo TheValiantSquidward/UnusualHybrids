@@ -107,7 +107,7 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
                 .add(Attributes.ATTACK_DAMAGE, 15.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 10.5D)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.0D)
-                .add(Attributes.FOLLOW_RANGE, 100D);
+                .add(Attributes.FOLLOW_RANGE, 64D);
 
 
     }
@@ -333,7 +333,7 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
     public void tick() {
         super.tick();
 
-        getRandomAnimationNumber();
+        //getRandomAnimationNumber();
 
 
         if (this.shouldBeEepy()) {
@@ -367,7 +367,7 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
     @Override
     public void customServerAiStep() {
         if (this.getMoveControl().hasWanted()) {
-            this.setSprinting(this.getMoveControl().getSpeedModifier() >= 1.5D);
+            this.setSprinting(this.getMoveControl().getSpeedModifier() >= 1.3D);
         } else {
             this.setSprinting(false);
         }
@@ -885,25 +885,23 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
         return PlayState.CONTINUE;
     }
 
-    protected <E extends IndominousRexEntity> PlayState idleController(AnimationState<E> event) {
-        int animState = getAnimationState();
-        if (isStillEnough() && !this.isAggressive() && getRandomAnimationNumber() == 0 && !this.isSwimming()) {
-            int rand = getRandomAnimationNumber();
-            if (rand > 4) {
-                return event.setAndContinue(SCRATCH);
-            }
-            if (rand > 2) {
-                return event.setAndContinue(YAWN);
-            }
-        }
-        return PlayState.CONTINUE;
-    }
+ //   protected <E extends IndominousRexEntity> PlayState idleController(AnimationState<E> event) {
+ //       int animState = getAnimationState();
+ //       if (isStillEnough() && !this.isAggressive() && !this.isSprinting() && getRandomAnimationNumber() == 0 && !this.isSwimming()) {
+ //           int rand = getRandomAnimationNumber();
+ //           if (rand > 4) {
+ //               return event.setAndContinue(SCRATCH);
+ //           }
+ //           if (rand > 2) {
+ //               return event.setAndContinue(YAWN);
+ //           }
+ //       }
+ //       return PlayState.CONTINUE;
+ //   }
 
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController[] { new AnimationController((GeoAnimatable)this, "Normal", 5, this::Controller) });
         controllers.add(new AnimationController[] { new AnimationController((GeoAnimatable)this, "Attack", 0, this::attackController) });
-        controllers.add(new AnimationController[] { new AnimationController((GeoAnimatable)this, "Idle", 0, this::idleController) });
-
     }
 
     @Override

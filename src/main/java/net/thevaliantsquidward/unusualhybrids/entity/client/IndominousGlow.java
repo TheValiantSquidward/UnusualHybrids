@@ -16,7 +16,7 @@ public class IndominousGlow extends GeoRenderLayer<IndominousRexEntity> {
     private static final ResourceLocation OVERLAY = new ResourceLocation(UnusualHybrids.MOD_ID, "textures/entity/indominous_glowmask.png");
     private static final ResourceLocation MODEL = new ResourceLocation(UnusualHybrids.MOD_ID, "geo/indominous_rex.geo.json");
     private static final ResourceLocation TEXTURE_WHITE = new ResourceLocation(UnusualHybrids.MOD_ID, "textures/entity/indominous_glowmask.png");
-    private static final ResourceLocation TEXTURE_BLACK = new ResourceLocation(UnusualHybrids.MOD_ID, "textures/entity/blackindominous_glowmask.png");
+    private static final ResourceLocation TEXTURE_BLACK = new ResourceLocation(UnusualHybrids.MOD_ID, "textures/entity/black_glowmask.png");
 
 
     public IndominousGlow(GeoRenderer<IndominousRexEntity> entityRendererIn) {

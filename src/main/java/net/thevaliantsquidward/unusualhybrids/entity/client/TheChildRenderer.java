@@ -5,21 +5,26 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.thevaliantsquidward.unusualhybrids.UnusualHybrids;
+import net.thevaliantsquidward.unusualhybrids.entity.custom.IndominousRexEntity;
 import net.thevaliantsquidward.unusualhybrids.entity.custom.MajungaraptorEntity;
 import net.thevaliantsquidward.unusualhybrids.entity.custom.TheChildEntity;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class TheChildRenderer extends GeoEntityRenderer<TheChildEntity> {
+    private static final ResourceLocation TEXTURE_WHITE = new ResourceLocation(UnusualHybrids.MOD_ID, "textures/entity/indominous_baby.png");
+    private static final ResourceLocation TEXTURE_BLACK = new ResourceLocation(UnusualHybrids.MOD_ID, "textures/entity/babyindomblack.png");
+
     public TheChildRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new TheChildModel());
         this.addRenderLayer(new TheChildGlow(this));
     }
 
-    @Override
-    public ResourceLocation getTextureLocation(TheChildEntity animatable) {
-        return new ResourceLocation(UnusualHybrids.MOD_ID, "textures/entity/indominous_baby.png");
+    public ResourceLocation getTextureLocation(TheChildEntity entity) {
+        return switch (entity.getVariant()) {
+            case 1 -> TEXTURE_BLACK;
+            default -> TEXTURE_WHITE;
+        };
     }
-
     @Override
     public void render(TheChildEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight) {

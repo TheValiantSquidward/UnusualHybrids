@@ -7,6 +7,7 @@ import com.peeko32213.unusualprehistory.common.entity.msc.util.PounceGoal;
 import com.peeko32213.unusualprehistory.common.entity.msc.util.dino.EntityBaseDinosaurAnimal;
 import com.peeko32213.unusualprehistory.core.registry.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -25,12 +26,15 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.thevaliantsquidward.unusualhybrids.item.ModItems;
+import net.thevaliantsquidward.unusualhybrids.sound.ModSounds;
 import net.thevaliantsquidward.unusualhybrids.tag.ModTags;
 import net.thevaliantsquidward.unusualhybrids.entity.ModEntities;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -48,8 +52,12 @@ public class MajungaraptorEntity extends EntityClimber {
     private static final RawAnimation VELOCI_WALK = RawAnimation.begin().thenLoop("animation.majungaraptor.walk");
     private static final RawAnimation VELOCI_IDLE = RawAnimation.begin().thenLoop("animation.majungaraptor.idle");
     private static final RawAnimation VELOCI_ATTACK = RawAnimation.begin().thenLoop("animation.velociraptor.attack");
-    private static final RawAnimation VELOCI_SWIM = RawAnimation.begin().thenLoop("animation.velociraptor.swim");
+    private static final RawAnimation VELOCI_SWIM = RawAnimation.begin().thenLoop("animation.majungaraptor.swim");
+    private static final RawAnimation MAJUNGAR_STUN = RawAnimation.begin().thenLoop("animation.majungaraptor.stunned");
     private static final RawAnimation MAJUNGAR_RUN = RawAnimation.begin().thenLoop("animation.majungaraptor.run");
+    private static final RawAnimation CLIMB = RawAnimation.begin().thenLoop("animation.majungaraptor.climb");
+    private static final RawAnimation FALL = RawAnimation.begin().thenLoop("animation.majungaraptor.fall");
+
     public MajungaraptorEntity(EntityType<? extends EntityBaseDinosaurAnimal> entityType, Level level) {
         super(entityType, level);
         ((GroundPathNavigation) this.getNavigation()).setCanOpenDoors(true);
@@ -57,6 +65,9 @@ public class MajungaraptorEntity extends EntityClimber {
         this.refreshDimensions();
     }
 
+    protected boolean isImmobile() {
+        return super.isImmobile() || this.stunnedTick > 0;
+    }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
@@ -235,11 +246,36 @@ public class MajungaraptorEntity extends EntityClimber {
 
     }
 
+
+    public void aiStep() {
+        super.aiStep();
+        if (this.isAlive()) {
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(this.isImmobile() ? 0.0 : 0.2);
+            if (this.stunnedTick > 0) {
+                --this.stunnedTick;
+                this.stunEffect();
+
+            }
+
+        }
+    }
+
+    private void stunEffect() {
+        if (this.random.nextInt(6) == 0) {
+            double d = this.getX() - (double)this.getBbWidth() * Math.sin((double)(this.yBodyRot * 0.017453292F)) + (this.random.nextDouble() * 0.6 - 0.3);
+            double e = this.getY() + (double)this.getBbHeight() - 0.3;
+            double f = this.getZ() + (double)this.getBbWidth() * Math.cos((double)(this.yBodyRot * 0.017453292F)) + (this.random.nextDouble() * 0.6 - 0.3);
+            this.level().addParticle(ParticleTypes.CRIT, true, this.getX(), this.getEyeY() + 0.5, this.getZ(), 0.0, 0.0, 0.0);
+        }
+
+    }
+
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putBoolean("Press", this.hasPressed());
         compound.putInt("scale", this.getModelScale());
+        compound.putInt("StunTick", this.stunnedTick);
     }
 
     @Override
@@ -247,6 +283,7 @@ public class MajungaraptorEntity extends EntityClimber {
         super.readAdditionalSaveData(compound);
         this.setPress(compound.getBoolean("Press"));
         this.setScale(Math.min(compound.getInt("scale"), 0));
+        this.stunnedTick = compound.getInt("StunTick");
     }
 
     @Override
@@ -405,6 +442,33 @@ public class MajungaraptorEntity extends EntityClimber {
         }
 
     }
+    private int stunnedTick;
+
+    @Override
+    public boolean causeFallDamage(float fallDistance, float multiplier, DamageSource source) {
+        if (fallDistance < 3.0F) {
+            return false;
+        }
+
+        if (Math.random() < 0.1) {
+            ItemStack itemToDrop = new ItemStack(ModItems.MAJUNGAR_TALON.get());
+            this.spawnAtLocation(itemToDrop);
+            this.playSound(SoundEvents.ITEM_PICKUP, 1.0F, 1.0F);
+        }
+        this.stunnedTick = 60;
+        this.playSound(ModSounds.THUD.get(), 1.0F, 1.0F);
+        this.level().broadcastEntityEvent(this, (byte)39);
+        this.getNavigation().stop();
+        return false;
+    }
+
+    public void handleEntityEvent(byte id) {
+        if (id == 39) {
+            this.stunnedTick = 60;
+        }
+
+        super.handleEntityEvent(id);
+    }
 
     @Nullable
     @Override
@@ -416,9 +480,18 @@ public class MajungaraptorEntity extends EntityClimber {
     protected <E extends MajungaraptorEntity> PlayState Controller(final software.bernie.geckolib.core.animation.AnimationState<E> event) {
         if (this.isFromBook()) {
             return PlayState.CONTINUE;
+        } if (this.stunnedTick > 0) {
+            event.setAndContinue(MAJUNGAR_STUN);
+            event.getController().setAnimationSpeed(1.0F);
+            return PlayState.CONTINUE;
         }
         if (this.isInWater()) {
             event.setAndContinue(VELOCI_SWIM);
+            event.getController().setAnimationSpeed(1.0F);
+            return PlayState.CONTINUE;
+        } if(this.isClimbing()) {
+
+            event.setAndContinue(CLIMB);
             event.getController().setAnimationSpeed(1.0F);
             return PlayState.CONTINUE;
         }

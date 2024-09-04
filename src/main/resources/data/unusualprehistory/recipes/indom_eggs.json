@@ -1,0 +1,11 @@
+{
+  "type": "unusualprehistory:cultivator",
+  "ingredients": [
+    {
+      "item": "unusualhybrids:indominus_dna_flask"
+    }
+  ],
+  "output": {
+    "item": "unusualhybrids:indom_eggs"
+  }
+}

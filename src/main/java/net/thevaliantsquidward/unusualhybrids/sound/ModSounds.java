@@ -19,6 +19,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> INDOM_HURT = createSoundEvent("indom_hurt");
     public static final RegistryObject<SoundEvent> INDOM_IDLE = createSoundEvent("indom_idle");
     public static final RegistryObject<SoundEvent> TALON = createSoundEvent("talon");
+    public static final RegistryObject<SoundEvent> THUD = createSoundEvent("thud");
 
     public static final RegistryObject<SoundEvent> INDOMITABLE = createSoundEvent("indomitable");
     private static RegistryObject<SoundEvent> createSoundEvent(String name) {

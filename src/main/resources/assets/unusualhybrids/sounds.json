@@ -47,6 +47,14 @@
   ],
   "subtitle": "unusualhybrids.sound.subtitle.indom_hurt"
 },
+  "thud": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "unusualhybrids:thump"
+      }
+    ]
+  },
   "indom_bite": {
     "category": "neutral",
     "sounds": [
