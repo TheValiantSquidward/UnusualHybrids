@@ -6,12 +6,13 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.Level;
 
-public abstract class EntityClimber extends EntityBaseDinosaurAnimal {
+public abstract class EntityClimber extends Animal {
     private static final EntityDataAccessor<Byte> CLIMB_FLAG = SynchedEntityData.defineId(EntityClimber.class, EntityDataSerializers.BYTE);
 
-    protected EntityClimber(EntityType<? extends EntityBaseDinosaurAnimal> entityType, Level level) {
+    protected EntityClimber(EntityType<? extends Animal> entityType, Level level) {
         super(entityType, level);
     }
 

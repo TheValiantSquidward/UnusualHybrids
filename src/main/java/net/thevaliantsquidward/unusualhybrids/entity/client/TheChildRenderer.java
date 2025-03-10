@@ -5,8 +5,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.thevaliantsquidward.unusualhybrids.UnusualHybrids;
-import net.thevaliantsquidward.unusualhybrids.entity.custom.IndominousRexEntity;
-import net.thevaliantsquidward.unusualhybrids.entity.custom.MajungaraptorEntity;
 import net.thevaliantsquidward.unusualhybrids.entity.custom.TheChildEntity;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 

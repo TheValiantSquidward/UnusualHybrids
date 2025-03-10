@@ -17,7 +17,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -131,7 +130,7 @@ public class IndominousRexEntity extends EntityBaseDinosaurAnimal {
         }));
 
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, false, false, entity -> {
-            return entity.getBoundingBox().getSize() >= 0.8 && !(entity instanceof EntityVelociraptor) && !(entity instanceof MajungaraptorEntity); // Adjust the size threshold as needed
+            return entity.getBoundingBox().getSize() >= 0.8 && !(entity instanceof EntityVelociraptor) && !(entity instanceof OldMajungaraptorEntity); // Adjust the size threshold as needed
         }) {
             public boolean canUse() {
                 return !hasEepy() && passiveFor == 0 && super.canUse();

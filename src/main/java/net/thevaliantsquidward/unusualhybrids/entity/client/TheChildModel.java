@@ -2,7 +2,6 @@ package net.thevaliantsquidward.unusualhybrids.entity.client;
 
 import net.minecraft.resources.ResourceLocation;
 import net.thevaliantsquidward.unusualhybrids.UnusualHybrids;
-import net.thevaliantsquidward.unusualhybrids.entity.custom.MajungaraptorEntity;
 import net.thevaliantsquidward.unusualhybrids.entity.custom.TheChildEntity;
 import software.bernie.geckolib.model.GeoModel;
 
